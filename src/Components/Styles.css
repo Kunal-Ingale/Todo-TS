@@ -104,6 +104,13 @@
     font-size: 20px;
     color: black;
   }
+  .todos__single--text1{
+    flex: 1;
+    padding: 5px;
+    border: none;
+    font-size: 20px;
+    color: white;
+  }
   
   .todos__single--text:focus {
     outline: none;

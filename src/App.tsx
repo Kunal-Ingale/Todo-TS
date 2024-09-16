@@ -6,12 +6,22 @@ import TodoList from './Components/TodoList'
 
 const App : React.FC = () => {
   const [todo, setTodo] = useState<string>("");
-  const[todos,setTodos] = useState<Todo []>([])
+  const[todos,setTodos] = useState<Todo []>(
+    () => {
+      const savedTodos = localStorage.getItem('todos');
+      if(savedTodos){
+        return JSON.parse(savedTodos)
+      }
+      return [];
+    }
+  )
  
-  const handleAdd = (e: React.FormEvent)=>{
+  const handleAdd = (e: React.FormEvent, todo:string)=>{
     e.preventDefault();
     if (todo.trim() !== ""){
-    setTodos([...todos, { id: Date.now(), todo, isDone: false }]);
+    const newTodo = [...todos, { id: Date.now(), todo, isDone: false }];
+    setTodos(newTodo);
+    localStorage.setItem('todos', JSON.stringify(newTodo));
     setTodo("");
   }
    
@@ -22,9 +32,12 @@ const App : React.FC = () => {
     <div>
       <div className='App'>
         <span className='heading'>Taskify</span>
-        <InputField todo={todo} setTodo={setTodo} 
-        handleAdd={handleAdd}/>
-        <TodoList todos={todos} setTodos = {setTodos}/>
+        <InputField 
+          todo={todo} 
+          setTodo={setTodo} 
+          handleAdd={(e) => handleAdd(e, todo)}
+        />
+        <TodoList todos={todos} setTodos={setTodos} />
       </div>
     </div>
   )
